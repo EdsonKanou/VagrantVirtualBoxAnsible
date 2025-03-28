@@ -1,0 +1,29 @@
+# Initialisation de la configuration Vagrant avec la version 2 de l'API.
+# Le bloc "config" contiendra toutes les instructions liées aux machines virtuelles.
+Vagrant.configure("2") do |config|
+
+  config.vm.define "jenkins" do |jenkins|
+    # Définit le nom d'hôte de la machine virtuelle, utile pour l'identification réseau.
+    jenkins.vm.hostname = "jenkins"
+    # Connecte la machine virtuelle à un réseau privé avec l'adresse IP spécifiée.   
+    jenkins.vm.network "private_network", ip: "192.168.33.10"
+    # Utilise l'image générique Debian 12 comme système d'exploitation pour cette VM.
+    jenkins.vm.box = "generic/debian12"
+  end
+
+  config.vm.define "dev" do |dev|
+    dev.vm.hostname = "dev"
+    dev.vm.network "private_network", ip: "192.168.33.11"
+    dev.vm.box = "generic/debian12"
+  end
+
+  config.vm.define "test" do |test|
+    test.vm.hostname = "test"
+    test.vm.network "private_network", ip: "192.168.33.12"
+    test.vm.box = "generic/debian12"
+  end
+
+  config.vm.network "forwarded_port", guest: 80, host: 8080, auto_correct: true
+  config.vm.usable_port_range = (8000..9000)
+
+end

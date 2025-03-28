@@ -1,0 +1,32 @@
+Vagrant.configure("2") do |config|
+  # Initialisation de la configuration Vagrant avec la version 2 de l'API.
+
+  config.vm.define "ansible-controller" do |controller|
+    # Définition d'une machine virtuelle nommée "ansible-controller".
+    # Le bloc 'controller' contient les configurations spécifiques à cette VM.
+
+    controller.vm.hostname = "controller"
+    # Définition du nom d'hôte de la machine virtuelle, utile pour la gestion réseau.
+
+    controller.vm.box = "generic/debian12"
+    # Utilisation de l'image Debian 12 comme système d'exploitation pour la VM.
+  end
+
+  config.vm.provision "shell", inline: <<-SHELL
+    # Utilisation de l'approvisionnement (provisioning) pour exécuter un script shell lors de la création de la VM.
+
+    sudo apt-get update
+    # Mise à jour de la liste des paquets disponibles.
+
+    sudo apt-get install -y software-properties-common
+    # Installation du paquet 'software-properties-common', nécessaire pour gérer les dépôts supplémentaires.
+
+    apt-add-repository --yes --update ppa:ansible/ansible
+    # Ajout du dépôt officiel Ansible à la liste des sources apt.
+
+    sudo apt-get install -y ansible
+    # Installation d'Ansible depuis le dépôt ajouté.
+  SHELL
+  # Fin du script shell utilisé pour l'approvisionnement.
+end
+# Fin du bloc de configuration principal.
